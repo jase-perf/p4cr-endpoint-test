@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  callback-service:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - DELAY_SECONDS=5
+    extra_hosts:
+      # If swarm has a hostname set, it will include that in the /update endpoint,
+      # so this section can help us make sure that goes to the right place.
+      - "swarm-domain:host-gateway"  # Docker's special hostname for accessing localhost on the host machine
+      - "example:192.168.1.120" # Can also use this to set a specific IP for a domain name. Useful for testing.
+    volumes:
+      - .:/app
+      - /app/node_modules
+    restart: unless-stopped
